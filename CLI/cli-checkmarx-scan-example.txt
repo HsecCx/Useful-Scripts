@@ -1,0 +1,1 @@
+cx.exe scan create -s . --branch main --project-name <example_project>  --apikey <api_key> --sast-incremental --project-tags <project_tag>

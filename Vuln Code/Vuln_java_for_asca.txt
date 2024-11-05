@@ -1,0 +1,14 @@
+    @PostMapping("upload")
+    public String uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            // Save the uploaded file to the server's filesystem
+            File uploadedFile = new File("/tmp/" + file.getOriginalFilename());
+            try (FileOutputStream fos = new FileOutputStream(uploadedFile)) {
+                fos.write(file.getBytes());
+            }
+            return "File uploaded successfully: " + uploadedFile.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Failed to upload file.";
+        }
+    }

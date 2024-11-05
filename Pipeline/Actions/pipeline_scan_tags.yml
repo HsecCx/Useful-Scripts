@@ -1,0 +1,31 @@
+name: Checkmarx Scan with Tags
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  checkmarx-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensures we get all commit history and tags
+
+      - name: Fetch and format tags
+        id: fetch_tags
+        run: |
+          git fetch --tags
+          tags=$(git tag | paste -sd "," -)  # Combine tags into a single CSV string
+          echo "tags_csv=$tags" >> $GITHUB_ENV
+
+      - name: Checkmarx AST GitHub Action
+        uses: Checkmarx/ast-github-action@2.0.23
+        with:
+          base_uri: ${{ secrets.CX_BASE_URI }}
+          cx_tenant: ${{ secrets.CX_TENANT }}
+          cx_client_id: ${{ secrets.CX_CLIENT_ID }}
+          cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
+          additional_params: "--tags ${{ env.tags_csv }}"

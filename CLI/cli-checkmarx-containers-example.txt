@@ -1,0 +1,1 @@
+cx.exe scan create --apikey --base-uri <base_uri> --project-name <project_name> -s <RESULT_FOLDER> --branch development --scan-types container-security --container-images <EXAMPLE_CONTAINER> --project-tags <EXAMPLE_TAG>
