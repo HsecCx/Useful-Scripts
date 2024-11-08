@@ -12,13 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Ensures we get all commit history and tags
+          fetch-depth: 0
 
       - name: Fetch and format tags
         id: fetch_tags
         run: |
           git fetch --tags
-          tags=$(git tag | paste -sd "," -)  # Combine tags into a single CSV string
+          tags=$(git tag | paste -sd "," -)  # to CSV string
           echo "tags_csv=$tags" >> $GITHUB_ENV
 
       - name: Checkmarx AST GitHub Action
