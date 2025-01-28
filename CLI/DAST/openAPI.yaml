@@ -1,0 +1,51 @@
+env:
+    contexts:
+        - excludePaths: []
+          includePaths:
+            - http://192.168.1.14:3000.*
+          name: Default Context
+          technology:
+            exclude: []
+          urls:
+            - http://192.168.1.14:3000
+    parameters:
+        failOnError: true
+        failOnWarning: false
+        progressToStdout: true
+    vars: {}
+jobs:
+    - name: passiveScan-config
+      parameters:
+        enableTags: false
+        scanOnlyInScope: true
+      rules: []
+      type: passiveScan-config
+    - name: openapi
+      parameters:
+        apiFile: /demo/swagger.yml
+        context: Default Context
+      type: openapi
+    - name: passiveScan-wait
+      parameters: {}
+      type: passiveScan-wait
+    - name: activeScan
+      parameters:
+        context: Default Context
+        threadPerHost: 4
+      policyDefinition:
+        rules: []
+      type: activeScan
+    - name: report-pdf
+      parameters:
+        reportDescription: ""
+        reportDir: /demo/test_output/dast-output-3231093716
+        reportFile: ZAP-Report
+        reportTitle: ZAP Scanning Report
+        template: traditional-pdf
+      type: report
+    - name: report
+      parameters:
+        reportDir: /demo/test_output/dast-output-3231093716
+        reportFile: ZAP-Report
+        template: traditional-json-plus
+      type: report

@@ -1,0 +1,12 @@
+{
+    "api_url": "https://<subdomain>.ast.checkmarx.net/api",
+    "iam_url": "https://<subdomain>.iam.checkmarx.net/auth/realms/",
+    "api_key": "your_api_key_here",
+    "tenant_name": "your_tenant_name_here",
+    "project_id": "your_project_id_here",
+    "package_name": "your_package_name_here",
+    "package_manager": "<package manager here>",
+    "package_version": "your_package_version_here",
+    "vulnerability_id": "your_vulnerability_id_here",
+    "comment": "your_comment_here"
+}

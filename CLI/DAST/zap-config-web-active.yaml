@@ -1,0 +1,72 @@
+env:
+    contexts:
+        - authentication:
+            method: form
+            parameters:
+                loginPageUrl: http://192.168.1.14:3000/login#/login
+                loginRequestBody: email=%username% & password=%password%
+                loginRequestUrl: http://192.168.1.14:3000/login#/login
+            verification:
+                method: response
+                pollFrequency: 60
+                pollPostData: ""
+                pollUnits: requests
+                pollUrl: ""
+          includePaths:
+            - 192.168.1.14:3000*
+            - http://192.168.1.14:3000.*
+          name: Juice-Shop
+          sessionManagement:
+            method: cookie
+          structure: {}
+          technology: {}
+          urls:
+            - http://192.168.1.14:3000
+          users:
+            - credentials:
+                password: abcdefg
+                username: abc123@test.com
+              name: abc@test.com
+    parameters:
+        failOnError: true
+        failOnWarning: false
+        progressToStdout: true
+jobs:
+    - parameters: {}
+      type: passiveScan-config
+    - parameters: {}
+      tests:
+        - name: At least 100 URLs found
+          onFail: INFO
+          operator: '>='
+          statistic: automation.spider.urls.added
+          type: stats
+          value: 100
+      type: spider
+    - parameters:
+        context: Juice-Shop
+        maxCrawlDepth: 3
+        maxDuration: 5
+        runOnlyIfModern: false
+        url: ""
+        user: abc@test.com
+      tests:
+        - name: At least 100 URLs found
+          onFail: INFO
+          operator: '>='
+          statistic: spiderAjax.urls.added
+          type: stats
+          value: 100
+      type: spiderAjax
+    - parameters: {}
+      type: passiveScan-wait
+    - parameters: {}
+      policyDefinition: {}
+      type: activeScan
+    - parameters:
+        reportDescription: ""
+        reportDir: /demo/test_output2/dast-output-1874563417
+        reportFile: ZAP-Report
+        reportTitle: ZAP by Checkmarx Scanning Report
+        template: traditional-json-plus
+      type: report

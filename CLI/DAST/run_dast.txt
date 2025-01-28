@@ -1,0 +1,1 @@
+podman run -e CX_APIKEY=<api_key> -v <mounted_folder_path>:/demo checkmarx/dast:latest web --environment-id=<environment_id> --config=/demo/zap-config-3.yaml --base-url=https://us.ast.checkmarx.net/ --output=/demo/test_output2 --timeout=10000 --update-interval=10 --jvm-properties=-Xmx3G --log-level=info --verbose --retry=1 --retry-delay=20
