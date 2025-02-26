@@ -1,0 +1,38 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:stable  # Base image with essential tools (git, curl, tar)
+    steps:
+      - checkout
+
+      - run:
+          name: "Download and Install Checkmarx AST CLI"
+          command: |
+            mkdir -p ~/bin
+            curl -L -o ast-cli_linux_x64.tar.gz https://download.checkmarx.com/CxOne/CLI/latest/ast-cli_linux_x64.tar.gz
+            tar -xzf ast-cli_linux_x64.tar.gz
+            chmod +x ./cx
+            mv ./cx ~/bin/cx
+            echo 'export PATH=$PATH:~/bin' >> $BASH_ENV  # Add to PATH for future steps
+            source $BASH_ENV
+
+
+      - run:
+          name: "Verify CLI Installation"
+          command: cx -h  # Verify that CLI is installed and accessible
+
+      - run:
+          name: "Run Checkmarx Scan"
+          command: |
+            cx scan create \
+            -s . \
+            --agent "CircleCI" \
+            --project-name $CIRCLE_PROJECT_REPONAME \
+            --branch $CIRCLE_BRANCH \
+            --base-uri $CX_BASE_URI \
+            --base-auth-uri $CX_BASE_AUTH_URI \
+            --tenant $CX_TENANT \
+            --client-id $CX_CLIENT_ID \
+            --client-secret $CX_CLIENT_SECRET
