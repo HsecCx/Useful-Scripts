@@ -14,21 +14,26 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
-          # Linux setup
+          # Download and extract latest Checkmarx One CLI
           - task: Bash@3
             displayName: 'Download and Extract Checkmarx CLI (Ubuntu)'
             inputs:
               targetType: 'inline'
               script: |
-                curl -LO https://github.com/Checkmarx/ast-cli/releases/download/2.3.0/ast-cli_2.3.0_linux_x64.tar.gz
-                mkdir CxONE_CLI
-                tar -xzf ast-cli_2.3.0_linux_x64.tar.gz -C CxONE_CLI
-                rm ast-cli_2.3.0_linux_x64.tar.gz
+                curl -LO https://download.checkmarx.com/CxOne/CLI/latest/ast-cli_linux_x64.tar.gz
+                mkdir -p CxONE_CLI
+                tar -xzf ast-cli_linux_x64.tar.gz -C CxONE_CLI
+                rm ast-cli_linux_x64.tar.gz
+                chmod +x CxONE_CLI/cx
 
-          # Run Checkmarx CLI Scan for Ubuntu
+          # Run Checkmarx CLI Scan
           - task: Bash@3
             displayName: 'Run Checkmarx CLI Scan (Ubuntu)'
             inputs:
               targetType: 'inline'
               script: |
-                ./CxONE_CLI/cx scan create --project-name "$(Build.Repository.Name)" -s "$(Build.SourcesDirectory)" --branch "$(Build.SourceBranchName)" --apikey <your api key>
+                ./CxONE_CLI/cx scan create \
+                  --project-name "$(Build.Repository.Name)" \
+                  -s "$(Build.SourcesDirectory)" \
+                  --branch "$(Build.SourceBranchName)" \
+                  --apikey $(CX_API_KEY)
